@@ -19,17 +19,25 @@
         # ip = "192.168.0.150/24";
       in {
         devShells.default = pkgs.mkShell {
-          name = "node";
+          name = "multi-disp";
 
           buildInputs = with pkgs; [
             bashInteractive
+
             arp-scan-rs
             nmap
+
             go
+            wails
+            gtk3
+            webkitgtk_6_0
+
             nodejs_25
           ];
 
-          shellHook = ''
+          shellHook = with pkgs; ''
+      export XDG_DATA_DIRS=${gsettings-desktop-schemas}/share/gsettings-schemas/${gsettings-desktop-schemas.name}:${gtk3}/share/gsettings-schemas/${gtk3.name}:$XDG_DATA_DIRS;
+      export GIO_MODULE_DIR="${pkgs.glib-networking}/lib/gio/modules/";
           '';
 
         };
