@@ -31,6 +31,8 @@
             wails
             gtk3
             webkitgtk_6_0
+            usbimager
+            p7zip
 
             nodejs_25
           ];
