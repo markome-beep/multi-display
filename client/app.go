@@ -30,32 +30,55 @@ func (a *App) Greet(name string) string {
 // Video Controls
 
 // hostnames of pi's (replace with IPs, or use mDNS for auto resolution)
-var pis = []string{
-	"pi1.local",
-	"pi2.local",
-	"pi3.local",
+var hosts = []string{
+	"root@pi1.local",
+	"root@pi2.local",
+	"root@pi3.local",
 	// add or subtract as needed
 }
 
 // Wrapper to send commands to all registered pi's
-func sendToAll(cmd string) {
-	for _, pi := range pis {
-		exec.Command(
-			"ssh",
-			"pi@"+pi, //this string is of the form username@hostname
-			"echo '"+cmd+"' | socat - /tmp/mpv-socket", //assume all sockets are in same location
-		).Start() // Start() does not block, do we want to wait until we know if command succeeded?
+func sendToAll(videoCommand string) {
+	for _, host := range hosts {
+		// check for 1 command per pi
+		remoteCmd := "echo '" + videoCommand + "' | socat - /tmp/mpv-socket"
+		go func() {
+			cmd := exec.Command(
+				"ssh",
+				host,      //this string is of the form username@hostname
+				remoteCmd, //assume all sockets are in same location)
+			)
+			cmd.Run()
+		}()
 	}
+
+	// ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	// defer cancel()
+
+	// cmd := exec.CommandContext(ctx,
+	// 	"ssh",
+	// 	"pi@"+pi,
+	// 	"echo '"+cmdJSON+"' | socat - /tmp/mpv-socket",
+	// )
+
+	// if err := cmd.Run(); err != nil {
+	// 	log.Printf("[%s] command failed: %v", pi, err)
+	// }
 }
 
-// Pause video
+// Pause videos
 func (a *App) PauseAll() {
 	sendToAll(`{"command":["set_property","pause",true]}`)
 }
 
-// Play video
+// Play videos
 func (a *App) PlayAll() {
 	sendToAll(`{"command":["set_property","pause",false]}`)
+}
+
+// Seek to a specific time in all videos (in seconds)
+func (a *App) SeekAll(timeInSeconds int) {
+	sendToAll(fmt.Sprintf(`{ "command": ["seek", %d, "absolute"] }`, timeInSeconds))
 }
 
 // May want to test connection to pi's
