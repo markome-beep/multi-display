@@ -34,6 +34,10 @@
             usbimager
             p7zip
 
+            mpv
+            yt-dlp
+            ffmpeg
+
             nodejs_25
           ];
 
