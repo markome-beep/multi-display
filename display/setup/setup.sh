@@ -13,7 +13,7 @@ sudo apt install -y --no-install-recommends \
         socat \
         openssh-server \
         mpv \
-        pipewire \
+        pipewire pipewire-audio-client-libraries pipewire-pulse pipewire-alsa wireplumber \
         wireplumber \
         ffmpeg
 
@@ -46,6 +46,11 @@ sudo tee -a /etc/lightdm/lightdm.conf > /dev/null <<EOF
 autologin-user=$USER
 autologin-user-timeout=0
 EOF
+
+# Fix Audio
+systemctl --user --now disable pulseaudio.service pulseaudio.socket
+systemctl --user mask pulseaudio
+systemctl --user --now enable pipewire pipewire-pulse wireplumber
 
 # Setup Auto Launch MPV on start up
 sudo tee -a "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
