@@ -87,14 +87,14 @@ Address=192.168.1.$num/24
 Gateway=192.168.1.1
 DNS=8.8.8.8
 EOF
-sudo systemctl restart systemd-networkd
+sudo systemctl enable systemd-networkd
+# sudo systemctl restart systemd-networkd
 
 # Setup Auto login
-sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
-sudo tee -a /etc/systemd/system/getty@tty1.service.d/autologin.conf > /dev/null <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin $USER --noclear %I $TERM
+sudo tee -a /etc/lightdm/lightdm.conf > /dev/null <<EOF
+[SeatDefaults]
+autologin-user=$USER
+autologin-user-timeout=0
 EOF
 
 # systemctl daemon-reexec
@@ -107,3 +107,5 @@ cat <<EOF >> "$HOME/.ssh/authorized_keys"
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi3bU1NHLQU56N08qbxIJAS8/gVJAzt/vr8Q20Zmx63 bluerachapradit@SOE-MAC-AW6Q6LR
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAc0jA2C50dJ9zZbyjXVmlD0x5TvnblKVm1PxRqnPFJ8 markome@nixos
 EOF
+
+/dev/pts/0
