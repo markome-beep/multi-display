@@ -62,7 +62,10 @@
 # return config
 # EOF
 
+# Sudo permissions at start
 sudo echo
+
+# Read in PI number to be used in IP
 read -r -p "Enter a number (10-255): " num < /dev/tty
 
 if ! [[ "$num" =~ ^[0-9]+$ ]] || (( num < 10 || num > 255 )); then
@@ -72,16 +75,33 @@ fi
 
 echo "Using 192.168.1.$num"
 
-NET_FILE="/etc/network/interfaces"
+# Set static IP
+NET_FILE="/etc/systemd/network/10-end0.network"
 sudo tee -a "$NET_FILE" > /dev/null <<EOF
+[Match]
+Name=end0
 
-# Virtual Static IP (Fallback/Secondary)
-auto end0:0
-iface end0:0 inet static
-address 192.168.1.$num
-netmask 255.255.255.0
+[Network]
+DHCP=yes
+Address=192.168.1.$num/24
+Gateway=192.168.1.1
+DNS=8.8.8.8
+EOF
+sudo systemctl restart systemd-networkd
+
+# Setup Auto login
+mkdir -p /etc/systemd/system/getty@tty1.service.d
+sudo tee -a /etc/systemd/system/getty@tty1.service.d/autologin.conf > /dev/null <<EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin $USER --noclear %I $TERM
 EOF
 
+systemctl daemon-reexec
+systemctl daemon-reload
+
+
+# Copy SSH keys
 mkdir -p ~/.ssh
 cat <<EOF >> "$HOME/.ssh/authorized_keys"
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi3bU1NHLQU56N08qbxIJAS8/gVJAzt/vr8Q20Zmx63 bluerachapradit@SOE-MAC-AW6Q6LR
