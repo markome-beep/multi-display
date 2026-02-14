@@ -62,7 +62,10 @@
 # return config
 # EOF
 
-read -p "Enter a number (10-255): " num
+sudo echo
+
+echo -n "Enter a number (10-255): " 
+read num
 
 # Check if it's an integer
 if ! [[ "$num" =~ ^[0-9]+$ ]]; then
@@ -77,7 +80,7 @@ if (( num < 10 || num > 255 )); then
 fi
 
 NET_FILE="/etc/network/interfaces"
-cat <<EOF >> "$NET_FILE"
+sudo tee -a "$NET_FILE" > /dev/null <<EOF
 
 # Virtual Static IP (Fallback/Secondary)
 auto eth0:0
