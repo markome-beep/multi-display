@@ -63,21 +63,14 @@
 # EOF
 
 sudo echo
+read -r -p "Enter a number (10-255): " num < /dev/tty
 
-echo -n "Enter a number (10-255): " 
-read num
-
-# Check if it's an integer
-if ! [[ "$num" =~ ^[0-9]+$ ]]; then
-  echo "Error: Not a valid number." >&2
+if ! [[ "$num" =~ ^[0-9]+$ ]] || (( num < 10 || num > 255 )); then
+  echo "Invalid number"
   exit 1
 fi
 
-# Check range
-if (( num < 10 || num > 255 )); then
-  echo "Error: Number must be between 10 and 255." >&2
-  exit 1
-fi
+echo "Using 192.168.1.$num"
 
 NET_FILE="/etc/network/interfaces"
 sudo tee -a "$NET_FILE" > /dev/null <<EOF
