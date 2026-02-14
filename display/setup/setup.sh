@@ -14,7 +14,6 @@ sudo apt install -y --no-install-recommends \
         openssh-server \
         mpv \
         pipewire pipewire-audio-client-libraries pipewire-pulse pipewire-alsa wireplumber \
-        wireplumber \
         ffmpeg
 
 # Read in PI number to be used in IP
@@ -57,7 +56,7 @@ sudo tee -a "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
 [Desktop Entry]
 Type=Application
 Name=my-mpv
-Exec=mpv --input-ipc-server=/tmp/mpv-socket --fullscreen --no-border --idle | tee /home/$USER/mpv-log
+Exec=rm -f /tmp/mpv-socket && mpv --input-ipc-server=/tmp/mpv-socket --fullscreen --no-border --idle --pause 2>&1 | tee /home/$USER/mpv-log
 Terminal=true
 EOF
 
