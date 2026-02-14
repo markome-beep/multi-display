@@ -1,69 +1,21 @@
 #!/usr/bin/env bash
 
-# sudo apt update
-# sudo apt upgrade
-# sudo apt install -y --no-install-recommends \
-#         unclutter-fixes \
-#         xserver-xorg \
-#         xinit \
-#         mpv \
-#         fastfetch \
-#         socat \
-#         openssh-server
-#        openbox \
-#        wezterm \
-
-# cat <<EOF > ~/.xinitrc
-# #!/bin/sh
-#
-# # xset -dpms
-# # xset s off
-# # xset s noblank
-#
-# unclutter -idle 1 &
-#
-# # wezterm --config-file ~/.config/wezterm.lua start -- fastfetch &
-# exec <my-server>
-# EOF
-#
-# cat <<EOF > ~/.xinitrc
-# #!/bin/sh
-#
-# xset -dpms
-# xset s off
-# xset s noblank
-#
-# unclutter -idle 1 &
-#
-# openbox &
-# wezterm --config-file ~/.config/wezterm.lua start -- fastfetch &
-# exec <my-server>
-# EOF
-
-# chmod +x ~/.xinitrc
-
-# cat <<EOF > ~/.config/wezterm.lua
-# -- Pull in the wezterm API
-# local wezterm = require 'wezterm'
-#
-# -- This will hold the configuration.
-# local config = wezterm.config_builder()
-#
-# config.enable_tab_bar = false
-#
-# local mux = wezterm.mux
-#
-# wezterm.on('gui-startup', function(cmd)
-#   local tab, pane, window = mux.spawn_window(cmd or {})
-#   window:gui_window():maximize()
-# end)
-#
-# -- Finally, return the configuration to wezterm:
-# return config
-# EOF
-
 # Sudo permissions at start
 sudo echo
+
+# Update System
+sudo apt update
+sudo apt upgrade
+armbian-upgrade
+
+# Install Packages
+sudo apt install -y --no-install-recommends \
+        socat \
+        openssh-server \
+        mpv \
+        pipewire \
+        wireplumber \
+        ffmpeg
 
 # Read in PI number to be used in IP
 read -r -p "Enter a number (10-255): " num < /dev/tty
@@ -72,7 +24,6 @@ if ! [[ "$num" =~ ^[0-9]+$ ]] || (( num < 10 || num > 255 )); then
   echo "Invalid number"
   exit 1
 fi
-
 echo "Using 192.168.1.$num"
 
 # Set static IP
@@ -87,8 +38,7 @@ Address=192.168.1.$num/24
 Gateway=192.168.1.1
 DNS=8.8.8.8
 EOF
-sudo systemctl enable systemd-networkd
-# sudo systemctl restart systemd-networkd
+sudo systemctl enable systemd-networkd > /dev/null
 
 # Setup Auto login
 sudo tee -a /etc/lightdm/lightdm.conf > /dev/null <<EOF
@@ -97,9 +47,14 @@ autologin-user=$USER
 autologin-user-timeout=0
 EOF
 
-# systemctl daemon-reexec
-# systemctl daemon-reload
-
+# Setup Auto Launch MPV on start up
+sudo tee -a "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
+[Desktop Entry]
+Type=Application
+Name=my-mpv
+Exec= mpv --input-ipc-server=/tmp/mpv-socket --fullscreen --no-border --video-sync=display-resample /home/$USER/output.mpv | tee /home/$USER/mpv-log
+Terminal=true
+EOF
 
 # Copy SSH keys
 mkdir -p ~/.ssh
@@ -107,3 +62,5 @@ cat <<EOF >> "$HOME/.ssh/authorized_keys"
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi3bU1NHLQU56N08qbxIJAS8/gVJAzt/vr8Q20Zmx63 bluerachapradit@SOE-MAC-AW6Q6LR
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAc0jA2C50dJ9zZbyjXVmlD0x5TvnblKVm1PxRqnPFJ8 markome@nixos
 EOF
+
+sudo reboot
