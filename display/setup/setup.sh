@@ -107,5 +107,3 @@ cat <<EOF >> "$HOME/.ssh/authorized_keys"
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi3bU1NHLQU56N08qbxIJAS8/gVJAzt/vr8Q20Zmx63 bluerachapradit@SOE-MAC-AW6Q6LR
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAc0jA2C50dJ9zZbyjXVmlD0x5TvnblKVm1PxRqnPFJ8 markome@nixos
 EOF
-
-/dev/pts/0
