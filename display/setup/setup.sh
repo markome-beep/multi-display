@@ -76,8 +76,8 @@ NET_FILE="/etc/network/interfaces"
 sudo tee -a "$NET_FILE" > /dev/null <<EOF
 
 # Virtual Static IP (Fallback/Secondary)
-auto eth0:0
-iface eth0:0 inet static
+auto end0:0
+iface end0:0 inet static
 address 192.168.1.$num
 netmask 255.255.255.0
 EOF
