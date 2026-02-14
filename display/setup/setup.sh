@@ -90,15 +90,15 @@ EOF
 sudo systemctl restart systemd-networkd
 
 # Setup Auto login
-mkdir -p /etc/systemd/system/getty@tty1.service.d
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
 sudo tee -a /etc/systemd/system/getty@tty1.service.d/autologin.conf > /dev/null <<EOF
 [Service]
 ExecStart=
 ExecStart=-/sbin/agetty --autologin $USER --noclear %I $TERM
 EOF
 
-systemctl daemon-reexec
-systemctl daemon-reload
+# systemctl daemon-reexec
+# systemctl daemon-reload
 
 
 # Copy SSH keys
