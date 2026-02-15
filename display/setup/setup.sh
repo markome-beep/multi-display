@@ -57,7 +57,7 @@ sudo tee -a "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
 [Desktop Entry]
 Type=Application
 Name=my-mpv
-Exec=rm -f /tmp/mpv-socket && mpv --input-ipc-server=/tmp/mpv-socket --fullscreen --no-border --idle --pause 2>&1 | tee /home/$USER/mpv-log
+Exec=mpv --input-ipc-server=/tmp/mpv-socket --fullscreen --no-border --idle --pause
 Terminal=true
 EOF
 
