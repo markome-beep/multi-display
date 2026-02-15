@@ -5,7 +5,7 @@ sudo echo
 
 # Update System
 sudo apt update
-sudo apt upgrade
+sudo apt upgrade -y
 armbian-upgrade
 
 # Install Packages
