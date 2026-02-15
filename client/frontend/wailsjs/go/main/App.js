@@ -5,3 +5,15 @@
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
+
+export function PauseAll() {
+  return window['go']['main']['App']['PauseAll']();
+}
+
+export function PlayAll() {
+  return window['go']['main']['App']['PlayAll']();
+}
+
+export function SeekAll(arg1) {
+  return window['go']['main']['App']['SeekAll'](arg1);
+}

@@ -50,6 +50,7 @@ EOF
 systemctl --user --now disable pulseaudio.service pulseaudio.socket
 systemctl --user mask pulseaudio
 systemctl --user --now enable pipewire pipewire-pulse wireplumber
+wpctl set-default 32
 
 # Setup Auto Launch MPV on start up
 sudo tee -a "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
