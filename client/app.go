@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -35,6 +37,27 @@ var hosts = []string{
 	"movie@192.168.1.11",
 	"movie@192.168.1.12",
 	"movie@192.168.1.13",
+}
+
+func (a *App) ProcessFile(filePath string, binName string) {
+    fmt.Printf("File %s dropped into %s\n", filePath, binName)
+    // Add your logic here (e.g., move file, read content)
+}
+
+func (a *App) DebugPrint(s string) {
+    fmt.Println(s)
+    // Add your logic here (e.g., move file, read content)
+}
+
+func (a *App) FileDialog(binName string) {
+	file, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Upload file to display",
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	a.ProcessFile(file, binName)
 }
 
 // Wrapper to send commands to all registered pi's

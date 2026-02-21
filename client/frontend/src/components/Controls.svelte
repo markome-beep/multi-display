@@ -15,7 +15,7 @@ let progress = $state(40)
 	<div class="flex flex-row items-center grow">
 		<div class="slider-wrapper">
 			<input class="range" type="range" bind:value={progress}/>
-			<div class="slider-progress wave" style={`width: ${progress}%`}></div>
+			<div class="slider-progress" style={`width: ${progress}%`}></div>
 		</div>
 	</div>
 </div>
@@ -38,12 +38,12 @@ let progress = $state(40)
   height: 8px;
   background: #ff0000; /* YouTube red */
   border-radius: 4px;
-  /*width: 40%; /* initial width matches input value */
   pointer-events: none; /* ignore clicks */
 }
 
 /* Dark theme YouTube-style range slider */
 .range {
+	position: absolute;
 	width: 100%;
 	appearance: none;
 	background: transparent; /* Let pseudo-elements handle track */
@@ -55,9 +55,6 @@ let progress = $state(40)
 
 /* Track (WebKit browsers) */
 .range::-webkit-slider-runnable-track {
-	position: absolute;
-	left: 0;
-	top: 0px;
 	height: 8px;
 	width: 100%;
 	background: #333; /* dark gray track */

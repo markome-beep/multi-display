@@ -20,11 +20,21 @@ func main() {
 		Title:  "client",
 		Width:  1024,
 		Height: 768,
+
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
+
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
+
+		OnStartup: app.startup,
+
+		DragAndDrop: &options.DragAndDrop{
+			EnableFileDrop:     true,
+			DisableWebViewDrop: false,
+			CSSDropProperty:    "--wails-drop-target",
+			CSSDropValue:       "drop",
+		},
 		Bind: []any{
 			app,
 		},
