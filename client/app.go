@@ -31,10 +31,10 @@ func (a *App) Greet(name string) string {
 
 // hostnames of pi's (replace with IPs, or use mDNS for auto resolution)
 var hosts = []string{
-	"root@pi1.local",
-	"root@pi2.local",
-	"root@pi3.local",
-	// add or subtract as needed
+	"movie@192.168.1.10",
+	"movie@192.168.1.11",
+	"movie@192.168.1.12",
+	"movie@192.168.1.13",
 }
 
 // Wrapper to send commands to all registered pi's
