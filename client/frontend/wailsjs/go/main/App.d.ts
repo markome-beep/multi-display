@@ -5,7 +5,7 @@ export function DebugPrint(arg1:string):Promise<void>;
 
 export function FileDialog(arg1:string):Promise<void>;
 
-export function Greet(arg1:string):Promise<string>;
+export function GetIPs(arg1:number):Promise<Array<string>>;
 
 export function PauseAll():Promise<void>;
 

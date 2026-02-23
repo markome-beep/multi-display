@@ -10,8 +10,8 @@ export function FileDialog(arg1) {
   return window['go']['main']['App']['FileDialog'](arg1);
 }
 
-export function Greet(arg1) {
-  return window['go']['main']['App']['Greet'](arg1);
+export function GetIPs(arg1) {
+  return window['go']['main']['App']['GetIPs'](arg1);
 }
 
 export function PauseAll() {
