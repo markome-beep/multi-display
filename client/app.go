@@ -127,4 +127,8 @@ func (a *App) SeekAll(timeInSeconds int) {
 	a.sendToAll(fmt.Sprintf(`{ "command": ["seek", %d, "absolute"] }`, timeInSeconds))
 }
 
+func (a *App) LoadVideoAll() {
+	a.sendToAll(`{ "command": ["loadfile", "/home/movie/vid.mp4"] }`)
+}
+
 // May want to test connection to pi's

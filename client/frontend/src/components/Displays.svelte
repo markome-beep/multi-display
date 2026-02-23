@@ -3,7 +3,7 @@
 	import { OnFileDrop, EventsOn } from "../../wailsjs/runtime";
 	import {
 		ProcessFile,
-		DebugPrint,
+		LoadVideoAll,
 		FileDialog,
 	} from "../../wailsjs/go/main/App";
 
@@ -58,7 +58,7 @@
 		<h2 class="text-zinc-200 text-3xl rounded-md w-fit">Displays</h2>
 		<button
 			class="text-zinc-200 bg-zinc-600 rounded-md h-full p-1 aspect-square ml-auto"
-			onclick={() => DebugPrint("Refresh")}
+			onclick={LoadVideoAll}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

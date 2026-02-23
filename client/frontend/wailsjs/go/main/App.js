@@ -14,6 +14,10 @@ export function GetIPs(arg1) {
   return window['go']['main']['App']['GetIPs'](arg1);
 }
 
+export function LoadVideoAll() {
+  return window['go']['main']['App']['LoadVideoAll']();
+}
+
 export function PauseAll() {
   return window['go']['main']['App']['PauseAll']();
 }

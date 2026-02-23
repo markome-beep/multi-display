@@ -7,6 +7,8 @@ export function FileDialog(arg1:string):Promise<void>;
 
 export function GetIPs(arg1:number):Promise<Array<string>>;
 
+export function LoadVideoAll():Promise<void>;
+
 export function PauseAll():Promise<void>;
 
 export function PlayAll():Promise<void>;
