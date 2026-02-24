@@ -114,12 +114,12 @@ func (a *App) sendToAll(videoCommand string) {
 
 // Pause videos
 func (a *App) PauseAll() {
-	a.sendToAll(`{\"command\":[\"set_property\",\"pause\",true]}`)
+	a.sendToAll(`{"command":["set_property","pause",true]}`)
 }
 
 // Play videos
 func (a *App) PlayAll() {
-	a.sendToAll(`{\"command":[\"set_property",\"pause\",false]}`)
+	a.sendToAll(`{"command":["set_property","pause",false]}`)
 }
 
 // Seek to a specific time in all videos (in seconds)
