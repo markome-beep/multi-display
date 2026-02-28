@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -85,55 +87,91 @@ func (a *App) FileDialog(binName string) {
 }
 
 // Wrapper to send commands to all registered pi's
-func (a *App) sendToAll(videoCommand string) {
+func (a *App) sendToAll(videoCommand string, delay int64) {
+	var wg sync.WaitGroup
+
+	runtime.EventsEmit(a.ctx, "Disable_UI")
+
 	for _, host := range a.hosts {
-		target := time.Now().Unix() + 5 // executes command in 5 seconds
+		target := time.Now().Unix() + delay // executes command in 5 seconds
 		remoteCmd := fmt.Sprintf(`
 			TARGET=%d
 			while [ "$(date +%%s)" -lt "$TARGET" ]; do :; done
 			echo '%s' | socat - /tmp/mpv-socket
 			`, target, videoCommand)
+		wg.Add(1)
 		go func() {
+
+			runtime.EventsEmit(a.ctx, "Upload_Started", host)
 			cmd := exec.Command(
 				"ssh",
+				"-o",
+				"ConnectTimeout=10",
 				host,      //this string is of the form username@hostname
 				remoteCmd, //assume all sockets are in same location)
 			)
-			cmd.Run()
+
+			if err := cmd.Run(); err != nil {
+				runtime.EventsEmit(a.ctx, "Upload_Failed", host)
+			} else {
+				runtime.EventsEmit(a.ctx, "Upload_Success", host)
+			}
+			wg.Done()
 		}()
 	}
-
-	// ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	// defer cancel()
-
-	// cmd := exec.CommandContext(ctx,
-	// 	"ssh",
-	// 	"pi@"+pi,
-	// 	"echo '"+cmdJSON+"' | socat - /tmp/mpv-socket",
-	// )
-
-	// if err := cmd.Run(); err != nil {
-	// 	log.Printf("[%s] command failed: %v", pi, err)
-	// }
+	go func() {
+		wg.Wait()
+		runtime.EventsEmit(a.ctx, "Enable_UI")
+	}()
 }
 
 // Pause videos
 func (a *App) PauseAll() {
-	a.sendToAll(`{"command":["set_property","pause",true]}`)
+	a.sendToAll(`{"command":["set_property","pause",true]}`, 5)
 }
 
 // Play videos
 func (a *App) PlayAll() {
-	a.sendToAll(`{"command":["set_property","pause",false]}`)
+	a.sendToAll(`{"command":["set_property","pause",false]}`, 5)
 }
 
 // Seek to a specific time in all videos (in seconds)
 func (a *App) SeekAll(timeInSeconds int) {
-	a.sendToAll(fmt.Sprintf(`{ "command": ["seek", %d, "absolute"] }`, timeInSeconds))
+	a.sendToAll(fmt.Sprintf(`{ "command": ["seek", %d, "absolute-percent"] }`, timeInSeconds), 0)
 }
 
 func (a *App) LoadVideoAll() {
-	a.sendToAll(`{ "command": ["loadfile", "/home/movie/vid.mp4"] }`)
+	a.sendToAll(`{ "command": ["loadfile", "/home/movie/vid.mp4"] }`, 0)
+}
+
+// Wrapper to send commands to all registered pi's
+func (a *App) RebootAll() {
+	var wg sync.WaitGroup
+	runtime.EventsEmit(a.ctx, "Disable_UI")
+
+	for _, host := range a.hosts {
+		remoteCmd := "sudo -S reboot"
+		wg.Add(1)
+		go func() {
+			runtime.EventsEmit(a.ctx, "Upload_Started", host)
+			cmd := exec.Command(
+				"ssh",
+				"-o",
+				"ConnectTimeout=10",
+				host,      //this string is of the form username@hostname
+				remoteCmd, //assume all sockets are in same location)
+			)
+			cmd.Stdin = strings.NewReader("movie123\n")
+
+			cmd.Run()
+			runtime.EventsEmit(a.ctx, "Upload_Clear", host)
+			wg.Done()
+		}()
+	}
+	go func() {
+		wg.Wait()
+		runtime.EventsEmit(a.ctx, "Enable_UI")
+	}()
 }
 
 // May want to test connection to pi's

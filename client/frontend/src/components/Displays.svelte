@@ -7,6 +7,16 @@
 		FileDialog,
 	} from "../../wailsjs/go/main/App";
 
+	let disabled = $state(false)
+
+	EventsOn("Disable_UI", () => {
+		disabled = true
+	});
+
+	EventsOn("Enable_UI", () => {
+		disabled = false
+	});
+
 	let { displays } = $props();
 	let active: string = $state("null");
 
@@ -51,14 +61,21 @@
 		erroredDisp = erroredDisp.filter((item) => item !== disp);
 		successDisp.push(disp);
 	});
+
+	EventsOn("Upload_Clear", (disp) => {
+		proccesingDisp = proccesingDisp.filter((item) => item !== disp);
+		erroredDisp = erroredDisp.filter((item) => item !== disp);
+		successDisp = successDisp.filter((item) => item !== disp);
+	});
 </script>
 
 <div class="w-full grow rounded-xl bg-zinc-900 p-4">
 	<div class="flex flex-row h-10">
 		<h2 class="text-zinc-200 text-3xl rounded-md w-fit">Displays</h2>
 		<button
-			class="text-zinc-200 bg-zinc-500 hover:bg-zinc-600 active:bg-zinc-700 active:scale-90 rounded-md h-full p-1 aspect-square ml-auto transition-all duration-100"
+			class="text-zinc-200 bg-zinc-500 hover:bg-zinc-600 disabled:bg-zinc-600 cursor-pointer disabled:cursor-progress active:bg-zinc-700 active:scale-90 rounded-md h-full p-1 aspect-square ml-auto transition-all duration-100"
 			onclick={LoadVideoAll}
+			{disabled}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +92,7 @@
 	>
 		{#each displays as disp}
 			<button
-				class="aspect-square bg-zinc-600 rounded-lg cursor-pointer outline-zinc-200 flex items-center justify-center flex-col border-2 border-zinc-400"
+				class="aspect-square bg-zinc-600 rounded-lg cursor-pointer outline-zinc-200 flex items-center justify-center flex-col border-2 border-zinc-400 disabled:cursor-progress"
 				class:bg-red-500={erroredDisp.includes(disp)}
 				class:bg-green-500={successDisp.includes(disp)}
 				class:bg-zinc-600={!successDisp.includes(disp) &&
@@ -90,6 +107,7 @@
 				onclick={() => {
 					FileDialog(disp);
 				}}
+				{disabled}
 			>
 				<p class="text-zinc-200" class:hidden={disp === active}>
 					Display

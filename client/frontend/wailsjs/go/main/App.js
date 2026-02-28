@@ -30,6 +30,10 @@ export function ProcessFile(arg1, arg2) {
   return window['go']['main']['App']['ProcessFile'](arg1, arg2);
 }
 
+export function RebootAll() {
+  return window['go']['main']['App']['RebootAll']();
+}
+
 export function SeekAll(arg1) {
   return window['go']['main']['App']['SeekAll'](arg1);
 }
