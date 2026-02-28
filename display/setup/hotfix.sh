@@ -73,7 +73,7 @@ fi
 echo "------------------------------------------"
 echo " Orange Pi NTP Configuration Tool"
 echo "------------------------------------------"
-read -pr "Is this the MASTER Pi (192.168.1.10)? (y/n): " IS_MASTER
+read -p "Is this the MASTER Pi (192.168.1.10)? (y/n): " IS_MASTER
 
 if [[ $IS_MASTER =~ ^[Yy]$ ]]; then
     echo "Configuring as MASTER SERVER..."
