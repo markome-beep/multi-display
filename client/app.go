@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -86,8 +87,12 @@ func (a *App) FileDialog(binName string) {
 // Wrapper to send commands to all registered pi's
 func (a *App) sendToAll(videoCommand string) {
 	for _, host := range a.hosts {
-		// check for 1 command per pi
-		remoteCmd := "echo '" + videoCommand + "' | socat - /tmp/mpv-socket"
+		target := time.Now().Unix() + 5 // executes command in 5 seconds
+		remoteCmd := fmt.Sprintf(`
+			TARGET=%d
+			while [ "$(date +%%s)" -lt "$TARGET" ]; do :; done
+			echo '%s' | socat - /tmp/mpv-socket
+			`, target, videoCommand)
 		go func() {
 			cmd := exec.Command(
 				"ssh",
