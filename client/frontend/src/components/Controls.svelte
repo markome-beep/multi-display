@@ -79,6 +79,7 @@
 				type="range"
 				bind:value={progress}
 				onchange={() => {SeekAll(progress)}}
+				{disabled}
 			/>
 			<div
 				class="slider-progress"
