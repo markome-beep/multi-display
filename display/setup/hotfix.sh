@@ -4,6 +4,13 @@
 mkdir -p ~/.config/my-mpv
 sudo tee "$HOME/.config/my-mpv/my-mpv.sh" > /dev/null <<EOF
 #!/usr/bin/env bash
+
+# Display Timeout off
+export DISPLAY=:0
+xset s off      # Disable screen saver
+xset s noblank  # Don't blank the video device
+xset -dpms      # Disable DPMS (Energy Star) features
+
 # Disable desktop
 pkill xfdesktop
 
