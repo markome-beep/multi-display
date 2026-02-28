@@ -22,7 +22,7 @@ xrandr -s 1920x1080
 # Start MPV
 mpv --input-ipc-server=/tmp/mpv-socket --fullscreen --no-border --idle --pause
 EOF
-chmod +x ~/.config/my-mpv/my-mpv.sh
+sudo chmod +x ~/.config/my-mpv/my-mpv.sh
 
 sudo tee "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
 [Desktop Entry]
@@ -34,7 +34,7 @@ EOF
 
 # Setup Audio
 mkdir -p ~/.config/wireplumber/wireplumber.conf.d
-sudo tee "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
+sudo tee "$HOME/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf" > /dev/null <<EOF
 monitor.alsa.rules = [
   {
     matches = [
