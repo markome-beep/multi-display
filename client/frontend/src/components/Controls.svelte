@@ -25,7 +25,6 @@
 	<button
 		class="bg-blue-800 hover:bg-blue-900 active:bg-blue-950 active:scale-90 disabled:cursor-progress transition-all duration-100 w-24 h-full rounded-md cursor-pointer disabled:bg-blue-900"
 		onclick={RebootAll}
-		{disabled}
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
