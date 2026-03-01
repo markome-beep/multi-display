@@ -141,12 +141,12 @@ func (a *App) SeekAll(timeInSeconds int) {
 }
 
 func (a *App) LoadVideoAll() {
-	a.Sync10()
 	a.sendToAll(`{ "command": ["loadfile", "/home/movie/vid.mp4"] }`, 0)
 }
 
 // Wrapper to send commands to all registered pi's
 func (a *App) RebootAll() {
+	a.Sync10()
 	var wg sync.WaitGroup
 	runtime.EventsEmit(a.ctx, "Disable_UI")
 
@@ -214,28 +214,6 @@ func (a *App) Sync10() {
 	)
 	cmd.Stdin = strings.NewReader("movie123\n")
 
-	var wg sync.WaitGroup
-
-	for _, host := range a.hosts {
-		remoteCmd := "sudo -S chronyc burst 4/4"
-		wg.Add(1)
-		go func() {
-			runtime.EventsEmit(a.ctx, "Upload_Started", host)
-			cmd := exec.Command(
-				"ssh",
-				"-o",
-				"ConnectTimeout=10",
-				host,      //this string is of the form username@hostname
-				remoteCmd, //assume all sockets are in same location)
-			)
-			cmd.Stdin = strings.NewReader("movie123\n")
-
-			cmd.Run()
-			runtime.EventsEmit(a.ctx, "Upload_Clear", host)
-			wg.Done()
-		}()
-	}
-	wg.Wait()
 	runtime.EventsEmit(a.ctx, "Enable_UI")
 }
 
