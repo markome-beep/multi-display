@@ -235,11 +235,7 @@ func (a *App) Sync10() {
 			wg.Done()
 		}()
 	}
-	go func() {
-		wg.Wait()
-		runtime.EventsEmit(a.ctx, "Enable_UI")
-	}()
-
+	wg.Wait()
 	runtime.EventsEmit(a.ctx, "Enable_UI")
 }
 
