@@ -176,6 +176,7 @@ func (a *App) RebootAll() {
 }
 
 func (a *App) Sync10() {
+	runtime.EventsEmit(a.ctx, "Disable_UI")
 	host := "movie@192.168.1.10"
 
 	remoteCmd := "sudo -S timedatectl set-ntp false"
@@ -202,6 +203,17 @@ func (a *App) Sync10() {
 	cmd.Stdin = strings.NewReader("movie123\n")
 
 	cmd.Run()
+
+	remoteCmd = "sudo -S timedatectl set-ntp true"
+	cmd = exec.Command(
+		"ssh",
+		"-o",
+		"ConnectTimeout=10",
+		host,      //this string is of the form username@hostname
+		remoteCmd, //assume all sockets are in same location)
+	)
+	cmd.Stdin = strings.NewReader("movie123\n")
+	runtime.EventsEmit(a.ctx, "Enable_UI")
 }
 
 // May want to test connection to pi's
