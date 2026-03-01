@@ -52,7 +52,7 @@ sudo tee -a "/home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua" > /
 rule = {
   matches = {
     {
-      { "node.name", "equals", "YOUR_NODE_NAME_HERE" },
+      { "node.name", "equals", "alsa_output.platform-5096000.codec.stereo-fallback" },
     },
   },
   apply_properties = {
