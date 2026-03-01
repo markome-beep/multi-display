@@ -2,7 +2,9 @@
 
 # Setup Autostart
 mkdir -p ~/.config/my-mpv
-sudo tee "$HOME/.config/my-mpv/my-mpv.sh" > /dev/null <<EOF
+sudo rm  ~/.config/my-mpv/my-mpv.sh
+sudo touch  ~/.config/my-mpv/my-mpv.sh
+sudo tee -a "$HOME/.config/my-mpv/my-mpv.sh" > /dev/null <<EOF
 #!/usr/bin/env bash
 
 # Display Timeout off
@@ -31,7 +33,9 @@ mpv --input-ipc-server=/tmp/mpv-socket --fullscreen --no-border --idle --pause
 EOF
 sudo chmod +x ~/.config/my-mpv/my-mpv.sh
 
-sudo tee "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
+sudo rm  ~/.config/autostart/my-mpv.desktop
+sudo touch  ~/.config/autostart/my-mpv.desktop
+sudo tee -a "$HOME/.config/autostart/my-mpv.desktop" > /dev/null <<EOF
 [Desktop Entry]
 Type=Application
 Name=my-mpv
@@ -41,7 +45,9 @@ EOF
 
 # Setup Audio
 mkdir -p ~/.config/wireplumber/main.lua.d/51-low-priority.lua
-sudo tee "$HOME/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf" > /dev/null <<EOF
+sudo rm  ~/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf
+sudo touch  ~/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf
+sudo tee -a "$HOME/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf" > /dev/null <<EOF
 rule = {
   matches = {
     {
