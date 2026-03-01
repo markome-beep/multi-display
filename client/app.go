@@ -204,7 +204,7 @@ func (a *App) Sync10() {
 
 	cmd.Run()
 
-	remoteCmd = "sudo -S timedatectl set-ntp true"
+	remoteCmd = "sudo -S systemctl enable chrony"
 	cmd = exec.Command(
 		"ssh",
 		"-o",
