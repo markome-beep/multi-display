@@ -44,10 +44,11 @@ Terminal=true
 EOF
 
 # Setup Audio
-mkdir -p /home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua
-sudo rm  /home/movie/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf
-sudo touch  /home/movie/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf
-sudo tee -a "/home/movie/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf" > /dev/null <<EOF
+
+sudo mkdir -p /home/movie/.config/wireplumber/main.lua.d/
+sudo rm /home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua
+sudo touch -p /home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua
+sudo tee -a "/home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua" > /dev/null <<EOF
 rule = {
   matches = {
     {
