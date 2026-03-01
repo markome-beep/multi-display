@@ -40,21 +40,21 @@ Terminal=true
 EOF
 
 # Setup Audio
-mkdir -p ~/.config/wireplumber/wireplumber.conf.d
+mkdir -p ~/.config/wireplumber/main.lua.d/51-low-priority.lua
 sudo tee "$HOME/.config/wireplumber/wireplumber.conf.d/45-set-low-prio.conf" > /dev/null <<EOF
-monitor.alsa.rules = [
-  {
-    matches = [
-      {
-        node.name = "alsa_output.platform-5096000.codec.stereo-fallback"
-      }
-    ], actions = {
-      update-props = {
-        priority.session = 500
-      }
-    }
-  }
-]
+rule = {
+  matches = {
+    {
+      { "node.name", "equals", "YOUR_NODE_NAME_HERE" },
+    },
+  },
+  apply_properties = {
+    ["priority.driver"] = 1,
+    ["priority.session"] = 1,
+  },
+}
+
+table.insert(alsa_monitor.rules, rule)
 EOF
 
 #!/bin/bash
