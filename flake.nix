@@ -26,6 +26,7 @@
 
             arp-scan-rs
             nmap
+            ntp
 
             go
             wails
