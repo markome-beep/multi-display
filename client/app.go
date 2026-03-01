@@ -213,6 +213,33 @@ func (a *App) Sync10() {
 		remoteCmd, //assume all sockets are in same location)
 	)
 	cmd.Stdin = strings.NewReader("movie123\n")
+
+	var wg sync.WaitGroup
+
+	for _, host := range a.hosts {
+		remoteCmd := "sudo -S chronyc burst 4/4"
+		wg.Add(1)
+		go func() {
+			runtime.EventsEmit(a.ctx, "Upload_Started", host)
+			cmd := exec.Command(
+				"ssh",
+				"-o",
+				"ConnectTimeout=10",
+				host,      //this string is of the form username@hostname
+				remoteCmd, //assume all sockets are in same location)
+			)
+			cmd.Stdin = strings.NewReader("movie123\n")
+
+			cmd.Run()
+			runtime.EventsEmit(a.ctx, "Upload_Clear", host)
+			wg.Done()
+		}()
+	}
+	go func() {
+		wg.Wait()
+		runtime.EventsEmit(a.ctx, "Enable_UI")
+	}()
+
 	runtime.EventsEmit(a.ctx, "Enable_UI")
 }
 
