@@ -141,6 +141,7 @@ func (a *App) SeekAll(timeInSeconds int) {
 }
 
 func (a *App) LoadVideoAll() {
+	a.SyncAll()
 	a.sendToAll(`{ "command": ["loadfile", "/home/movie/vid.mp4"] }`, 0)
 }
 
@@ -175,6 +176,48 @@ func (a *App) RebootAll() {
 	}()
 }
 
+func (a *App) SyncAll() {
+	runtime.EventsEmit(a.ctx, "Disable_UI")
+	host := "movie@192.168.1.10"
+
+	remoteCmd := "sudo -S systemctl restart chrony"
+	cmd := exec.Command(
+		"ssh",
+		"-o",
+		"ConnectTimeout=10",
+		host,      //this string is of the form username@hostname
+		remoteCmd, //assume all sockets are in same location)
+	)
+	cmd.Stdin = strings.NewReader("movie123\n")
+
+	cmd.Run()
+
+	var wg sync.WaitGroup
+
+	for _, host := range a.hosts {
+		remoteCmd := "sudo -S chronyc burst 4/4"
+		wg.Add(1)
+		go func() {
+			runtime.EventsEmit(a.ctx, "Upload_Started", host)
+			cmd := exec.Command(
+				"ssh",
+				"-o",
+				"ConnectTimeout=10",
+				host,      //this string is of the form username@hostname
+				remoteCmd, //assume all sockets are in same location)
+			)
+			cmd.Stdin = strings.NewReader("movie123\n")
+
+			cmd.Run()
+			runtime.EventsEmit(a.ctx, "Upload_Clear", host)
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	runtime.EventsEmit(a.ctx, "Enable_UI")
+
+}
+
 func (a *App) Sync10() {
 	runtime.EventsEmit(a.ctx, "Disable_UI")
 	host := "movie@192.168.1.10"
@@ -188,7 +231,6 @@ func (a *App) Sync10() {
 		remoteCmd, //assume all sockets are in same location)
 	)
 	cmd.Stdin = strings.NewReader("movie123\n")
-
 	cmd.Run()
 
 	time := time.Now().Format("2006-01-02 15:04:05")
@@ -201,10 +243,9 @@ func (a *App) Sync10() {
 		remoteCmd, //assume all sockets are in same location)
 	)
 	cmd.Stdin = strings.NewReader("movie123\n")
-
 	cmd.Run()
 
-	remoteCmd = "sudo -S systemctl enable chrony"
+	remoteCmd = "sudo -S timedatectl set-ntp true"
 	cmd = exec.Command(
 		"ssh",
 		"-o",
@@ -213,8 +254,10 @@ func (a *App) Sync10() {
 		remoteCmd, //assume all sockets are in same location)
 	)
 	cmd.Stdin = strings.NewReader("movie123\n")
+	cmd.Run()
 
 	runtime.EventsEmit(a.ctx, "Enable_UI")
+
 }
 
 // May want to test connection to pi's
