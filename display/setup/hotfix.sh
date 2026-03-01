@@ -47,7 +47,7 @@ EOF
 
 sudo mkdir -p /home/movie/.config/wireplumber/main.lua.d/
 sudo rm /home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua
-sudo touch -p /home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua
+sudo touch /home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua
 sudo tee -a "/home/movie/.config/wireplumber/main.lua.d/51-low-priority.lua" > /dev/null <<EOF
 rule = {
   matches = {
