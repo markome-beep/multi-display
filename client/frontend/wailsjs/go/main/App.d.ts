@@ -18,3 +18,5 @@ export function ProcessFile(arg1:string,arg2:string):Promise<void>;
 export function RebootAll():Promise<void>;
 
 export function SeekAll(arg1:number):Promise<void>;
+
+export function Sync10():Promise<void>;

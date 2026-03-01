@@ -72,6 +72,7 @@
 <div class="w-full grow rounded-xl bg-zinc-900 p-4">
 	<div class="flex flex-row h-10">
 		<h2 class="text-zinc-200 text-3xl rounded-md w-fit">Displays</h2>
+
 		<button
 			class="text-zinc-200 bg-zinc-500 hover:bg-zinc-600 disabled:bg-zinc-600 cursor-pointer disabled:cursor-progress active:bg-zinc-700 active:scale-90 rounded-md h-full p-1 aspect-square ml-auto transition-all duration-100"
 			onclick={LoadVideoAll}

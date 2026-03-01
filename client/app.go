@@ -141,6 +141,7 @@ func (a *App) SeekAll(timeInSeconds int) {
 }
 
 func (a *App) LoadVideoAll() {
+	a.Sync10()
 	a.sendToAll(`{ "command": ["loadfile", "/home/movie/vid.mp4"] }`, 0)
 }
 
@@ -172,6 +173,35 @@ func (a *App) RebootAll() {
 		wg.Wait()
 		runtime.EventsEmit(a.ctx, "Enable_UI")
 	}()
+}
+
+func (a *App) Sync10() {
+	host := "movie@192.168.1.10"
+
+	remoteCmd := "sudo timedatectl set-ntp false"
+	cmd := exec.Command(
+		"ssh",
+		"-o",
+		"ConnectTimeout=10",
+		host,      //this string is of the form username@hostname
+		remoteCmd, //assume all sockets are in same location)
+	)
+	cmd.Stdin = strings.NewReader("movie123\n")
+
+	cmd.Run()
+
+	time := time.Now().Format("2006-01-02 15:04:05")
+	remoteCmd = fmt.Sprintf(`sudo -S timedatectl set-time "%s"`, time)
+	cmd = exec.Command(
+		"ssh",
+		"-o",
+		"ConnectTimeout=10",
+		host,      //this string is of the form username@hostname
+		remoteCmd, //assume all sockets are in same location)
+	)
+	cmd.Stdin = strings.NewReader("movie123\n")
+
+	cmd.Run()
 }
 
 // May want to test connection to pi's

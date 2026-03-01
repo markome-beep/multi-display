@@ -37,3 +37,7 @@ export function RebootAll() {
 export function SeekAll(arg1) {
   return window['go']['main']['App']['SeekAll'](arg1);
 }
+
+export function Sync10() {
+  return window['go']['main']['App']['Sync10']();
+}
