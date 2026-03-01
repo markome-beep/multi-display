@@ -178,7 +178,7 @@ func (a *App) RebootAll() {
 func (a *App) Sync10() {
 	host := "movie@192.168.1.10"
 
-	remoteCmd := "sudo timedatectl set-ntp false"
+	remoteCmd := "sudo -S timedatectl set-ntp false"
 	cmd := exec.Command(
 		"ssh",
 		"-o",
