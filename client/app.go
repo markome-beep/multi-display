@@ -231,6 +231,9 @@ func (a *App) Sync10() {
 		remoteCmd, //assume all sockets are in same location)
 	)
 	cmd.Stdin = strings.NewReader("movie123\n")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
 	cmd.Run()
 
 	time := time.Now().Format("2006-01-02 15:04:05")
@@ -257,7 +260,6 @@ func (a *App) Sync10() {
 	cmd.Run()
 
 	runtime.EventsEmit(a.ctx, "Enable_UI")
-
 }
 
 // May want to test connection to pi's
